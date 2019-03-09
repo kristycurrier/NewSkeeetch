@@ -23,29 +23,33 @@ namespace Skeeetch.Controllers
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
 
-        public async Task<ActionResult> FindBusinesses( /*INSERT SEARCH TERMS HERE*/)
+        public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
 
         {
-            // var search = new GetBusinesses();
+
+            var allTerms = string.Join("+", searchTerms.Terms); 
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
+<<<<<<< HEAD
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
+=======
+<<<<<<< HEAD
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer RmHWbkgm1IpXzFdMuWmvfVY4GRcZ2CMOhqvnidzZSugToDo9Rx8fQI4dD9aulF1SNtDgXw9aG7CDKQYERKNOHV0Csbq_FMIl9mfaEf6LzG_SAkcbGXGWhwe7TBKEXHYx");
+=======
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+>>>>>>> d9d4e92adec5e0e10a15dd9465b5772e3a05b7ff
+>>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
 
-            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
-            List<string> BusinessListTopThree = new List<string>();
-            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
-            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(1).YelpId);
-            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(2).YelpId);
+            List<string> businessListTopThree = new List<string>();
 
+            businessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
+            businessListTopThree.Add(businessResults.Result.businesses.ElementAt(1).YelpId);
+            businessListTopThree.Add(businessResults.Result.businesses.ElementAt(2).YelpId);
 
-            _cache.Set("id", BusinessListTopThree, _policy);
-
-
-
-
-
+            _cache.Set("id", businessListTopThree, _policy);
 
             return RedirectToAction("Reviews");
 
@@ -61,13 +65,25 @@ namespace Skeeetch.Controllers
             {
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
+<<<<<<< HEAD
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
+=======
+<<<<<<< HEAD
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer RmHWbkgm1IpXzFdMuWmvfVY4GRcZ2CMOhqvnidzZSugToDo9Rx8fQI4dD9aulF1SNtDgXw9aG7CDKQYERKNOHV0Csbq_FMIl9mfaEf6LzG_SAkcbGXGWhwe7TBKEXHYx");
+=======
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+>>>>>>> d9d4e92adec5e0e10a15dd9465b5772e3a05b7ff
+>>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
                 reviewListofTopThree.Add(businessReviews);
             }
 
+<<<<<<< HEAD
             _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
+=======
+            _cache.Set("topThreeReviews", reviewListofTopThree, _policy);
+>>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
 
             return RedirectToAction("Keyword");
 
@@ -76,17 +92,12 @@ namespace Skeeetch.Controllers
 
         public ActionResult Business()
         {
-            //var id = yelpId;
-            
-
             ViewBag.Title = "Business Info";
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
             var result = client.GetAsync($"https://api.yelp.com/v3/businesses/qa70o0JbMVMQJf4fvWiZaw").Result;
             var business = result.Content.ReadAsAsync<Business>().Result;
-
-           
-
+            
             return View(business);
 
         }
