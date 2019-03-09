@@ -29,12 +29,17 @@ namespace Skeeetch.Controllers
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer API KEY HERE");
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
 
             var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+            List<string> BusinessListTopThree = new List<string>();
+            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
+            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(1).YelpId);
+            BusinessListTopThree.Add(businessResults.Result.businesses.ElementAt(2).YelpId);
 
-            _cache.Set("id", businessResults, _policy);
+
+            _cache.Set("id", BusinessListTopThree, _policy);
 
 
 
@@ -42,6 +47,24 @@ namespace Skeeetch.Controllers
 
 
             return RedirectToAction("Reviews");
+
+        }
+
+        public async Task<ActionResult> Reviews()
+        {
+           
+            List<string> businessList  = _cache.Get("id") as List<string>;
+            List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
+            for (int i = 0; i < businessList.Count; i++)
+            {
+                ViewBag.Title = "Reviews";
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+                var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
+                var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
+                reviewListofTopThree.Add(businessReviews);
+            }
+            return View();
 
         }
 
