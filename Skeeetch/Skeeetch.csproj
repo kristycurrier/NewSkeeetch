@@ -185,6 +185,7 @@
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewRoot.cs" />
+    <Compile Include="Models\SearchTerms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
