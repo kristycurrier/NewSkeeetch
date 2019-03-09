@@ -46,22 +46,24 @@ namespace Skeeetch.Controllers
 
 
 
-            return RedirectToAction("Reviews", businessResults);
+            return RedirectToAction("Reviews");
 
         }
 
         public async Task<ActionResult> Reviews()
         {
-             
-            
            
-
+            List<string> businessList  = _cache.Get("id") as List<string>;
+            List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
+            for (int i = 0; i < businessList.Count; i++)
+            {
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer API KEY HERE");
-                var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/id/reviews");
-                var businessReviews = result.Content.ReadAsAsync<ReviewRoot>();
-            
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer raaudZPJ5cBD-o2GeXygnClQg5NBxz2BPcGVsWtiHEHFFjcTxw1ORVFzTASsLQaiEpAwiiwlfiwElgRZ3J_lhiFTyVwr4zH4eFCr1rUTd0go9OFFXZXTQrlSxrB6XHYx");
+                var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
+                var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
+                reviewListofTopThree.Add(businessReviews);
+            }
             return View();
 
         }
