@@ -4,7 +4,7 @@ using System.Data.Entity;
 
 namespace Skeeetch.Data
 {
-    public class SkeeetchDbInitializer : DropCreateDatabaseAlways<SkeeetchContext>
+    public class SkeeetchDbInitializer : CreateDatabaseIfNotExists<SkeeetchContext>
     {
         protected override void Seed(SkeeetchContext context)
         {
