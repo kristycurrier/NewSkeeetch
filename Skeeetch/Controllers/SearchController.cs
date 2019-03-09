@@ -98,7 +98,7 @@ namespace Skeeetch.Controllers
         public ActionResult Results(string id)
         {
             var keywords = _cache.Get("keywordcache") as DocumentRoot;
-            //var business = _cache.Get("id") as Business;
+            //var business = _cache.Get("id") as BusinessRoot;
             return View(keywords);
         }
 

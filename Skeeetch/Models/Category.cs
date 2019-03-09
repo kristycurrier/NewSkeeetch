@@ -10,7 +10,5 @@ namespace Skeeetch.Models
         public int ID { get; set; }
         public string DisplayTerm { get; set; }
         public string SearchTerm { get; set; }
-
-        public virtual ICollection<Category> Categories { get; set; }
     }
 }
