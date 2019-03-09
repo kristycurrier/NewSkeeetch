@@ -1,0 +1,22 @@
+﻿@model Skeeetch.Models.DocumentRoot
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<div>
+    <h4>DocumentRoot</h4>
+    <hr />
+    <dl class="dl-horizontal"></dl>
+    @Html.DisplayFor(model => model.Documents.FirstOrDefault().YelpId)
+    @Html.DisplayFor(model => model.Documents.ElementAt(1).YelpId)
+
+    @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[0])
+    @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[1])
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
