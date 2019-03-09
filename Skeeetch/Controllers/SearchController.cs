@@ -21,6 +21,31 @@ namespace Skeeetch.Controllers
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
+
+        public async Task<ActionResult> FindBusinesses( /*INSERT SEARCH TERMS HERE*/)
+
+        {
+            // var search = new GetBusinesses();
+
+            ViewBag.Title = "Search Results";
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer API KEY HERE");
+
+            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+
+            _cache.Set("id", businessResults, _policy);
+
+
+
+
+
+
+            return RedirectToAction("Reviews");
+
+        }
+
+
         public ActionResult Business()
         {
             //var id = yelpId;
@@ -32,7 +57,7 @@ namespace Skeeetch.Controllers
             var result = client.GetAsync($"https://api.yelp.com/v3/businesses/qa70o0JbMVMQJf4fvWiZaw").Result;
             var business = result.Content.ReadAsAsync<Business>().Result;
 
-            _cache.Set("id", business, _policy);
+           
 
             return View(business);
 
