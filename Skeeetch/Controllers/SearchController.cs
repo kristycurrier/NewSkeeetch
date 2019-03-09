@@ -31,15 +31,9 @@ namespace Skeeetch.Controllers
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
-<<<<<<< HEAD
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-=======
-<<<<<<< HEAD
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer RmHWbkgm1IpXzFdMuWmvfVY4GRcZ2CMOhqvnidzZSugToDo9Rx8fQI4dD9aulF1SNtDgXw9aG7CDKQYERKNOHV0Csbq_FMIl9mfaEf6LzG_SAkcbGXGWhwe7TBKEXHYx");
-=======
+
             client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
->>>>>>> d9d4e92adec5e0e10a15dd9465b5772e3a05b7ff
->>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
+
 
             var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
@@ -65,25 +59,16 @@ namespace Skeeetch.Controllers
             {
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
-<<<<<<< HEAD
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-=======
-<<<<<<< HEAD
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer RmHWbkgm1IpXzFdMuWmvfVY4GRcZ2CMOhqvnidzZSugToDo9Rx8fQI4dD9aulF1SNtDgXw9aG7CDKQYERKNOHV0Csbq_FMIl9mfaEf6LzG_SAkcbGXGWhwe7TBKEXHYx");
-=======
+
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
->>>>>>> d9d4e92adec5e0e10a15dd9465b5772e3a05b7ff
->>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
+
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
                 reviewListofTopThree.Add(businessReviews);
             }
 
-<<<<<<< HEAD
             _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
-=======
             _cache.Set("topThreeReviews", reviewListofTopThree, _policy);
->>>>>>> 456877c954abf3e84efea7b51df8b9d9a33fabb3
 
             return RedirectToAction("Keyword");
 
