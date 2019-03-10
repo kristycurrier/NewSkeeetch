@@ -14,7 +14,6 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
-using Skeeetch.Logic;
 
 namespace Skeeetch.Controllers
 {
@@ -33,8 +32,7 @@ namespace Skeeetch.Controllers
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
 
             var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
@@ -44,7 +42,7 @@ namespace Skeeetch.Controllers
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(1).YelpId);
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(2).YelpId);
 
-            _cache.Set("idList", businessListTopThree, _policy);
+            _cache.Set("id", businessListTopThree, _policy);
 
             return RedirectToAction("Reviews");
 
@@ -61,8 +59,7 @@ namespace Skeeetch.Controllers
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
 
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
@@ -118,23 +115,17 @@ namespace Skeeetch.Controllers
             HttpResponseMessage response;
 
             // Request body
+            
+            //string myWofrkingJson = "{'documents': [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you?'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too'}, {'language': 'en','id': '3','text': 'David is missing from the keyword search and it was awkward'}]}";
+            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
 
-            string awkward = "I'm hoping this works.";
-            awkward = Regex.Replace(awkward, @"'", "");
-            firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
-            secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
-            thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
+            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + "'}]}"; //, {'language': 'en','id': '2','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text}" + "'}, {'language': 'en','id': '3','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text}" + "'}]}";
+            string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
 
-            //string myWorkingJson = "{documents: [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you? I wonder what breaks the Json.'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too. Is this what breaks it?'}, {'language': 'en','id': '3','text': ' {awkward} '}]}";
-            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
+            myJson.Replace("\n", String.Empty);
 
-            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstReviewSet.ToString() + "'}]}"; //, {'language': 'en','id': '2','text': '" + firstReviewSet.ToString() + "'}, {'language': 'en','id': '3','text': '" + firstReviewSet.ToString()  + "'}]}";
-            //string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
-
-            //myJson.Replace("\n", String.Empty);
-
-            //string newJson = myJson;
-            //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
+            string newJson = myJson;
+            //myJson = Regex.Replace(myJson, @"\n\n", " ");
 
             using (client)
             {

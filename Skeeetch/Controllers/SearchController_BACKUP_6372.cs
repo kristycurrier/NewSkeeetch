@@ -14,7 +14,10 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
+<<<<<<< HEAD
+=======
 using Skeeetch.Logic;
+>>>>>>> 88a93e7364d01db1fb41aee3442d07204a75d6aa
 
 namespace Skeeetch.Controllers
 {
@@ -24,20 +27,27 @@ namespace Skeeetch.Controllers
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
 
-        public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
+        public async Task<ActionResult> FindBusinesses()//SearchTerms searchTerms)
 
         {
 
-            var allTerms = string.Join("+", searchTerms.Terms); 
+            //var allTerms = string.Join("+", searchTerms.Terms); 
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
+<<<<<<< HEAD
+
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
+=======
+>>>>>>> 88a93e7364d01db1fb41aee3442d07204a75d6aa
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
-
-            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
+        
+            var result = await client.GetAsync("https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            //var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+            List<Business> businessListIEnum = businessResults.Result.businesses.ToList();
+            bool enoughReviews = Validation.ListHasEnoughReviews(businessListIEnum);
             List<string> businessListTopThree = new List<string>();
 
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
@@ -53,7 +63,7 @@ namespace Skeeetch.Controllers
         public async Task<ActionResult> Reviews()
         {
            
-            List<string> businessList  = _cache.Get("id") as List<string>;
+            List<string> businessList  = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
             for (int i = 0; i < businessList.Count; i++)
@@ -61,8 +71,11 @@ namespace Skeeetch.Controllers
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
 
+<<<<<<< HEAD
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
+=======
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
+>>>>>>> 88a93e7364d01db1fb41aee3442d07204a75d6aa
 
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
@@ -104,9 +117,12 @@ namespace Skeeetch.Controllers
             var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
             var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
 
+<<<<<<< HEAD
            
 
 
+=======
+>>>>>>> 88a93e7364d01db1fb41aee3442d07204a75d6aa
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
@@ -118,6 +134,19 @@ namespace Skeeetch.Controllers
             HttpResponseMessage response;
 
             // Request body
+<<<<<<< HEAD
+            
+            //string myWofrkingJson = "{'documents': [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you?'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too'}, {'language': 'en','id': '3','text': 'David is missing from the keyword search and it was awkward'}]}";
+            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
+
+            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + "'}]}"; //, {'language': 'en','id': '2','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text}" + "'}, {'language': 'en','id': '3','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text}" + "'}]}";
+            string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
+
+            myJson.Replace("\n", String.Empty);
+
+            string newJson = myJson;
+            //myJson = Regex.Replace(myJson, @"\n\n", " ");
+=======
 
             string awkward = "I'm hoping this works.";
             awkward = Regex.Replace(awkward, @"'", "");
@@ -135,6 +164,8 @@ namespace Skeeetch.Controllers
 
             //string newJson = myJson;
             //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
+             
+>>>>>>> 88a93e7364d01db1fb41aee3442d07204a75d6aa
 
             using (client)
             {
