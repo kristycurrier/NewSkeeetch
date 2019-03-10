@@ -13,58 +13,40 @@
 
         @Html.DisplayNameFor(model => model.Documents.FirstOrDefault().YelpId)
         <dd>
-            @for (int i = 0; i < 3; i++)
-            {
-
-
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[0])
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[1])
-
-                @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[i])
+            <a href="@Url.Action("Business", "Search", new { YelpId = 0})">
+                @for (int i = 0; i < 3; i++)
+                {
+                    @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[i])
+                
                 <br />
-            }
-        </dd>
-        <br />
-        <br />
+                }</a>
+            </dd>
+<br /> <br />       
+       <dd>
+           <a href="@Url.Action("Business", "Search", new { YelpId = 1})">
+               @for (int i = 0; i < 3; i++)
+               {
+                   {
+                       @Html.DisplayFor(model => model.Documents.ElementAt(1).KeyPhrases[i])
+                       <br />
 
-        <dd>
-            @for (int i = 0; i < 3; i++)
-            {
+                   }
+               }
+           </a>
+           </dd>
+<br /><br />
+      <dd>
+          <a href="@Url.Action("Business", "Search", new { YelpId = 2})">
+              @for (int i = 0; i < 3; i++)
+              {
+                  {
 
+                      @Html.DisplayFor(model => model.Documents.ElementAt(2).KeyPhrases[i])
 
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[0])
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[1])
-
-                //if (Model.Documents.ElementAt(0).KeyPhrases.Count > (i))
-                {
-                    @Html.DisplayFor(model => model.Documents.ElementAt(1).KeyPhrases[i])
-                    <br />
-                }
-            }
-        </dd>
-
-        <br />
-        <br />
-
-        <dd>
-            @for (int i = 0; i < 3; i++)
-            {
-
-
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[0])
-                //@Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[1])
-
-                //if (Model.Documents.ElementAt(0).KeyPhrases.Count > (i))
-                {
-                    @Html.DisplayFor(model => model.Documents.ElementAt(2).KeyPhrases[i])
-                    <br />
-                }
-            }
-        </dd>
-
+                      <br />
+                  }
+              
+          }</a>
+      </dd>
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
