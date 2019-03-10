@@ -11,9 +11,9 @@ namespace Skeeetch.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
-            var db = new SkeeetchContext();
-            var category = db.Categories.FirstOrDefault();
+          //  ViewBag.Title = "Home Page";
+          //  var db = new SkeeetchContext();
+          //  var category = db.Categories.FirstOrDefault();
 
             return View();
         }

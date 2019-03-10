@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
+using System.Text.RegularExpressions;
 
 namespace Skeeetch.Controllers
 {
@@ -31,7 +32,7 @@ namespace Skeeetch.Controllers
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
 
             var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
@@ -52,17 +53,20 @@ namespace Skeeetch.Controllers
            
             List<string> businessList  = _cache.Get("id") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
+
             for (int i = 0; i < businessList.Count; i++)
             {
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
+
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
                 reviewListofTopThree.Add(businessReviews);
             }
 
+            _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
             _cache.Set("topThreeReviews", reviewListofTopThree, _policy);
 
             return RedirectToAction("Keyword");
@@ -74,7 +78,7 @@ namespace Skeeetch.Controllers
         {
             ViewBag.Title = "Business Info";
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer **API KEY GOES HERE**");
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
             var result = client.GetAsync($"https://api.yelp.com/v3/businesses/qa70o0JbMVMQJf4fvWiZaw").Result;
             var business = result.Content.ReadAsAsync<Business>().Result;
             
@@ -84,26 +88,51 @@ namespace Skeeetch.Controllers
 
         public async Task<ActionResult> Keyword()
         {
+            var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
+
+            var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text + 
+                topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
+            var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text + 
+                topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
+            var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text + 
+                topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
+
+            var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
+            var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
+            var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
+
+           
+
+
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "***API key***");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "2416a592074c4cde91bf255cb745ddaf");
 
             var uri = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases?" + queryString;
 
             HttpResponseMessage response;
 
             // Request body
-            byte[] byteData = Encoding.UTF8.GetBytes("{'documents': [{'language': 'en','id': '1','text': 'Hello world. This is some input text that I love. Testing a little more.  Interested in how many keywords there are.'},{'language': 'fr','id': '2','text': 'Bonjour tout le monde'}]");
+            
+            //string myWofrkingJson = "{'documents': [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you?'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too'}, {'language': 'en','id': '3','text': 'David is missing from the keyword search and it was awkward'}]}";
+            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
 
-            using (var content = new ByteArrayContent(byteData))
+            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + "'}]}"; //, {'language': 'en','id': '2','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text}" + "'}, {'language': 'en','id': '3','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text}" + "'}]}";
+            string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
+
+            myJson.Replace("\n", String.Empty);
+
+            string newJson = myJson;
+            //myJson = Regex.Replace(myJson, @"\n\n", " ");
+
+            using (client)
             {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                response = await client.PostAsync(uri, content);
-                
+                response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
             }
-            var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
+
+                var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
             //var info = keywords.Documents.FirstOrDefault<Document>();
             //var info2 = keywords.Documents.ElementAt(1);
 
@@ -117,7 +146,7 @@ namespace Skeeetch.Controllers
         public ActionResult Results(string id)
         {
             var keywords = _cache.Get("keywordcache") as DocumentRoot;
-            //var business = _cache.Get("id") as Business;
+            //var business = _cache.Get("id") as BusinessRoot;
             return View(keywords);
         }
 
