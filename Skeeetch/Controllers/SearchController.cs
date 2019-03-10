@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
+using Skeeetch.Logic;
 
 
 namespace Skeeetch.Controllers
@@ -24,20 +25,22 @@ namespace Skeeetch.Controllers
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
 
-        public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
+        public async Task<ActionResult> FindBusinesses()//SearchTerms searchTerms)
 
         {
 
-            var allTerms = string.Join("+", searchTerms.Terms); 
+            //var allTerms = string.Join("+", searchTerms.Terms); 
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
-
-            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            var result = await client.GetAsync("https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            //var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+            List<Business> businessListIEnum = businessResults.Result.businesses.ToList();
+            bool enoughReviews = Validation.ListHasEnoughReviews(businessListIEnum);
             List<string> businessListTopThree = new List<string>();
 
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
@@ -52,8 +55,8 @@ namespace Skeeetch.Controllers
 
         public async Task<ActionResult> Reviews()
         {
-           
-            List<string> businessList  = _cache.Get("id") as List<string>;
+
+            List<string> businessList = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
             for (int i = 0; i < businessList.Count; i++)
@@ -62,7 +65,6 @@ namespace Skeeetch.Controllers
                 var client = new HttpClient();
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
 
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
@@ -84,7 +86,7 @@ namespace Skeeetch.Controllers
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
             var result = client.GetAsync($"https://api.yelp.com/v3/businesses/qa70o0JbMVMQJf4fvWiZaw").Result;
             var business = result.Content.ReadAsAsync<Business>().Result;
-            
+
             return View(business);
 
         }
@@ -93,19 +95,16 @@ namespace Skeeetch.Controllers
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
 
-            var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text + 
+            var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
-            var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text + 
+            var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
-            var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text + 
+            var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
 
             var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
             var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
             var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
-
-           
-
 
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -136,12 +135,13 @@ namespace Skeeetch.Controllers
             //string newJson = myJson;
             //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
 
+
             using (client)
             {
                 response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
             }
 
-                var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
+            var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
             //var info = keywords.Documents.FirstOrDefault<Document>();
             //var info2 = keywords.Documents.ElementAt(1);
 
@@ -149,7 +149,7 @@ namespace Skeeetch.Controllers
             _cache.Set("keywordcache", keywords, _policy);
 
             return View(keywords);
-            
+
         }
 
         public ActionResult Results(string id)
@@ -160,8 +160,8 @@ namespace Skeeetch.Controllers
         }
 
 
-            // GET: Yelp
-            public ActionResult Index()
+        // GET: Yelp
+        public ActionResult Index()
         {
             return View();
         }
