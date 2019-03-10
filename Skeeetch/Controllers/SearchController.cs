@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
-using Skeeetch.Logic;
+
 
 namespace Skeeetch.Controllers
 {
@@ -36,7 +36,7 @@ namespace Skeeetch.Controllers
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
 
-            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
+            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
             List<string> businessListTopThree = new List<string>();
 
