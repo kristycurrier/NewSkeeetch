@@ -16,7 +16,6 @@ using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using Skeeetch.Logic;
 
-
 namespace Skeeetch.Controllers
 {
     public class SearchController : Controller
@@ -55,6 +54,7 @@ namespace Skeeetch.Controllers
 
         public async Task<ActionResult> Reviews()
         {
+
 
             List<string> businessList = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
@@ -95,11 +95,13 @@ namespace Skeeetch.Controllers
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
 
+
             var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
             var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
             var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
+
                 topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
 
             var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
@@ -142,6 +144,7 @@ namespace Skeeetch.Controllers
             }
 
             var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
+
             //var info = keywords.Documents.FirstOrDefault<Document>();
             //var info2 = keywords.Documents.ElementAt(1);
 

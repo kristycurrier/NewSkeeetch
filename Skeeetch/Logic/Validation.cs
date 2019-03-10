@@ -15,6 +15,7 @@ namespace Skeeetch.Logic
 
             for (int i = 0; i < businesses.Count; i++)
             {
+
                 if (businesses.ElementAt(i).ReviewCount >= 3)
                 {
                     listToCheck.Add(businesses.ElementAt(i));
