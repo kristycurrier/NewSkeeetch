@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
+using Skeeetch.Logic;
 
 namespace Skeeetch.Controllers
 {
@@ -37,13 +38,15 @@ namespace Skeeetch.Controllers
             var result = await client.GetAsync("https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
             //var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+            List<Business> businessListIEnum = businessResults.Result.businesses.ToList();
+            bool enoughReviews = Validation.ListHasEnoughReviews(businessListIEnum);
             List<string> businessListTopThree = new List<string>();
 
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(0).YelpId);
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(1).YelpId);
             businessListTopThree.Add(businessResults.Result.businesses.ElementAt(2).YelpId);
 
-            _cache.Set("id", businessListTopThree, _policy);
+            _cache.Set("idList", businessListTopThree, _policy);
 
             return RedirectToAction("Reviews");
 
@@ -52,7 +55,7 @@ namespace Skeeetch.Controllers
         public async Task<ActionResult> Reviews()
         {
            
-            List<string> businessList  = _cache.Get("id") as List<string>;
+            List<string> businessList  = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
             for (int i = 0; i < businessList.Count; i++)
@@ -130,7 +133,7 @@ namespace Skeeetch.Controllers
 
             //string newJson = myJson;
             //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
-            
+             
 
             using (client)
             {
