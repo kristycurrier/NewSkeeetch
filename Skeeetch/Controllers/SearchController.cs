@@ -23,19 +23,19 @@ namespace Skeeetch.Controllers
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
 
-        public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
+        public async Task<ActionResult> FindBusinesses()//SearchTerms searchTerms)
 
         {
 
-            var allTerms = string.Join("+", searchTerms.Terms); 
+            //var allTerms = string.Join("+", searchTerms.Terms); 
 
             ViewBag.Title = "Search Results";
             var client = new HttpClient();
 
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
-
-
-            var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
+        
+            var result = await client.GetAsync("https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
+            //var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
             List<string> businessListTopThree = new List<string>();
 
@@ -60,7 +60,7 @@ namespace Skeeetch.Controllers
                 ViewBag.Title = "Reviews";
                 var client = new HttpClient();
 
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer API");
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
                 var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
                 var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
@@ -113,17 +113,24 @@ namespace Skeeetch.Controllers
             HttpResponseMessage response;
 
             // Request body
+
+            string awkward = "I'm hoping this works.";
+            awkward = Regex.Replace(awkward, @"'", "");
+            firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
+            secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
+            thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
+
+            //string myWorkingJson = "{documents: [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you? I wonder what breaks the Json.'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too. Is this what breaks it?'}, {'language': 'en','id': '3','text': ' {awkward} '}]}";
+            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
+
+            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstReviewSet.ToString() + "'}]}"; //, {'language': 'en','id': '2','text': '" + firstReviewSet.ToString() + "'}, {'language': 'en','id': '3','text': '" + firstReviewSet.ToString()  + "'}]}";
+            //string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
+
+            //myJson.Replace("\n", String.Empty);
+
+            //string newJson = myJson;
+            //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
             
-            //string myWofrkingJson = "{'documents': [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you?'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too'}, {'language': 'en','id': '3','text': 'David is missing from the keyword search and it was awkward'}]}";
-            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '2','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '3','text': '" + $"{thirdReviewSet}" + "'}]}";
-
-            string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + "'}]}"; //, {'language': 'en','id': '2','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text}" + "'}, {'language': 'en','id': '3','text': '" + $"{topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text}" + "'}]}";
-            string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
-
-            myJson.Replace("\n", String.Empty);
-
-            string newJson = myJson;
-            //myJson = Regex.Replace(myJson, @"\n\n", " ");
 
             using (client)
             {
