@@ -129,24 +129,11 @@ namespace Skeeetch.Controllers
 
             // Request body
 
-            string awkward = "I'm hoping this works.";
-            awkward = Regex.Replace(awkward, @"'", "");
             firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
             secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
             thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
 
-            //string myWorkingJson = "{documents: [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you? I wonder what breaks the Json.'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too. Is this what breaks it?'}, {'language': 'en','id': '3','text': ' {awkward} '}]}";
             string myJson = "{'documents': [{'language': 'en','id': '"+$"{firstYelpId}" +"','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '"+$"{secondYelpId}" + "','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '" + $"{thirdYelpId}" + "','text': '" + $"{thirdReviewSet}" + "'}]}";
-
-
-            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstReviewSet.ToString() + "'}]}"; //, {'language': 'en','id': '2','text': '" + firstReviewSet.ToString() + "'}, {'language': 'en','id': '3','text': '" + firstReviewSet.ToString()  + "'}]}";
-            //string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
-
-            //myJson.Replace("\n", String.Empty);
-
-            //string newJson = myJson;
-            //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
-
 
             using (client)
             {
@@ -154,10 +141,6 @@ namespace Skeeetch.Controllers
             }
 
             var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
-
-            //var info = keywords.Documents.FirstOrDefault<Document>();
-            //var info2 = keywords.Documents.ElementAt(1);
-
 
             _cache.Set("keywordcache", keywords, _policy);
 

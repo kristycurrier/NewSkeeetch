@@ -169,6 +169,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Logic\BusinessList.cs" />
+    <Compile Include="Logic\ISort.cs" />
+    <Compile Include="Logic\LargeSort.cs" />
+    <Compile Include="Logic\MediumSort.cs" />
+    <Compile Include="Logic\SmallSort.cs" />
     <Compile Include="Logic\Sorting.cs" />
     <Compile Include="Logic\Validation.cs" />
     <Compile Include="Models\CategoryRoot.cs" />
@@ -185,6 +189,8 @@
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\DocumentRoot.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\KeyPhrase.cs" />
+    <Compile Include="Models\KeyPhraseRoot.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewRoot.cs" />
