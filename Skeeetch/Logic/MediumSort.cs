@@ -6,39 +6,9 @@ using Skeeetch.Models;
 
 namespace Skeeetch.Logic
 {
-    public class MediumSort : ISort
+    public class MediumSort : SortBase
     {
-        public List<Business> BoringSort(List<Business> businesses)
-        {
-            List<Business> sortedList = businesses.OrderByDescending(o => o.Rating).ToList();
-
-            return sortedList;
-        }
-
-        public List<Business> FunSort(List<Business> businesses)
-        {
-            List<Business> sortedList = businesses.OrderByDescending(o => o.Rating).ToList();
-            sortedList = MiddleSort(sortedList);
-
-            return sortedList;
-        }
-
-        public List<Business> ExcitingSort(List<Business> businesses)
-        {
-            List<Business> sortedList = businesses.OrderBy(o => o.Rating).ToList();
-            sortedList = MiddleSort(sortedList);
-
-            return sortedList;
-        }
-
-        public List<Business> SketchSort(List<Business> businesses)
-        {
-            List<Business> sortedList = businesses.OrderBy(o => o.Rating).ToList();
-
-            return sortedList;
-        }
-
-        public List<Business> MiddleSort(List<Business> businesses)
+        public override List<Business> MiddleSort(List<Business> businesses)
         {
             List<Business> sortedList = new List<Business>();
             int i;

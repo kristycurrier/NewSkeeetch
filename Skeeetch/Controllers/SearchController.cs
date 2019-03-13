@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using Skeeetch.Logic;
+using Newtonsoft.Json;
 
 namespace Skeeetch.Controllers
 {
@@ -45,6 +46,10 @@ namespace Skeeetch.Controllers
             BusinessList newBusinessList = new BusinessList();
 
             var validbusinessList = await newBusinessList.ReturnValidBusinessList(searchTerms, rawBusinessResultsList);
+
+            //var sortedBusniessList = Sorting.SortList(validbusinessList, searchTerms);
+            var sortList = new Sorting();
+            var sortedBusinessList = sortList.SortList(validbusinessList, searchTerms);
 
             List<string> businessListTopThree = new List<string>();
 
@@ -117,6 +122,30 @@ namespace Skeeetch.Controllers
             var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
             var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
 
+            KeyPhrase firstKeyPhrase = new KeyPhrase("en", firstYelpId, firstReviewSet);
+            KeyPhrase secondKeyPhrase = new KeyPhrase("en", secondYelpId, secondReviewSet);
+            KeyPhrase thirdKeyPhrase = new KeyPhrase("en", thirdYelpId, thirdReviewSet);
+
+            IEnumerable<KeyPhrase> keyPhraseList = new KeyPhrase[] {firstKeyPhrase, secondKeyPhrase, thirdKeyPhrase };
+
+            KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
+
+            
+            
+            //var keyPhraseList = new List<KeyPhrase>();
+            //keyPhraseList.Add(firstKeyPhrase);
+            //keyPhraseList.Add(secondKeyPhrase);
+            //keyPhraseList.Add(thirdKeyPhrase);
+
+            //var keyPhrasesToSend = new KeyPhraseRoot
+            //{
+            //    Documents = keyPhraseList
+            //};
+
+
+            //END OF TEST SET UP**************************************************************************
+            //*******************************************************************************************
+
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
@@ -129,16 +158,29 @@ namespace Skeeetch.Controllers
 
             // Request body
 
-            firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
-            secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
-            thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
+            //firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
+            //secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
+            //thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
 
-            string myJson = "{'documents': [{'language': 'en','id': '"+$"{firstYelpId}" +"','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '"+$"{secondYelpId}" + "','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '" + $"{thirdYelpId}" + "','text': '" + $"{thirdReviewSet}" + "'}]}";
+            //string myJson = "{'documents': [{'language': 'en','id': '"+$"{firstYelpId}" +"','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '"+$"{secondYelpId}" + "','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '" + $"{thirdYelpId}" + "','text': '" + $"{thirdReviewSet}" + "'}]}";
+
+            //new Json method******************************************************************************************
+            //NEWS TEST METHOD****************************************************************************************
+
+            var jsonData = JsonConvert.SerializeObject(jsonToSend);
 
             using (client)
             {
-                response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
+                response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
             }
+
+            //***********************************************************************************************************
+            //**********************************************************************************************************
+
+            //using (client)
+            //{
+            //    response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
+            //}
 
             var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
 

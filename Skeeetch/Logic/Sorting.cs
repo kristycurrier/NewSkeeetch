@@ -10,25 +10,34 @@ namespace Skeeetch.Logic
     {
         //make method to determine sketch level then send it to the size of sort class methods
 
-        public static List<Business> SortList (List<Business> businesses, SearchTerms searchTerms)
+        public List<Business> SortList (List<Business> businesses, SearchTerms searchTerms)
         {
+
+            var factory = new SortFactory();
+            var sort = factory.Create(businesses.Count);
+
             string level = searchTerms.Adventure;
+            var results = new List<Business>();
+
             switch (level)
             {
                 case "boring":
-                    //create 
+                    results = sort.BoringSort(businesses);
                     break;
                 case "fun":
+                    results = sort.FunSort(businesses);
                     break;
                 case "exciting":
+                    results = sort.ExcitingSort(businesses);
                     break;
                 case "sketch":
+                    results = sort.SketchSort(businesses);
                     break;
                 default:
                     break;
                 }
-            //var sortedBusinessList = 
-            return businesses;
+
+            return results;
         }
 
     }

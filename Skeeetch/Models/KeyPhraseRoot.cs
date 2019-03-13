@@ -7,6 +7,6 @@ namespace Skeeetch.Models
 {
     public class KeyPhraseRoot
     {
-        public IEnumerable<KeyPhrase> KeyPhrases { get; set; }
+        public IEnumerable<KeyPhrase> Documents { get; set; }
     }
 }
