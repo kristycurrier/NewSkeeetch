@@ -16,6 +16,7 @@ using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using Skeeetch.Logic;
 using Newtonsoft.Json;
+using Skeeetch.Services;
 
 namespace Skeeetch.Controllers
 {
@@ -101,48 +102,52 @@ namespace Skeeetch.Controllers
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
 
-            var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
-                topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
-            var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
-                topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
-            var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
-                topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
+            //var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
+            //    topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
+            //var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
+            //    topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
+            //var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
+            //    topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
 
-            var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
-            var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
-            var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
+            //var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
+            //var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
+            //var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
 
-            KeyPhrase firstKeyPhrase = new KeyPhrase("en", firstYelpId, firstReviewSet);
-            KeyPhrase secondKeyPhrase = new KeyPhrase("en", secondYelpId, secondReviewSet);
-            KeyPhrase thirdKeyPhrase = new KeyPhrase("en", thirdYelpId, thirdReviewSet);
+            //KeyPhrase firstKeyPhrase = new KeyPhrase("en", firstYelpId, firstReviewSet);
+            //KeyPhrase secondKeyPhrase = new KeyPhrase("en", secondYelpId, secondReviewSet);
+            //KeyPhrase thirdKeyPhrase = new KeyPhrase("en", thirdYelpId, thirdReviewSet);
 
-            IEnumerable<KeyPhrase> keyPhraseList = new KeyPhrase[] {firstKeyPhrase, secondKeyPhrase, thirdKeyPhrase };
+            //IEnumerable<KeyPhrase> keyPhraseList = new KeyPhrase[] {firstKeyPhrase, secondKeyPhrase, thirdKeyPhrase };
+            KeywordService service = new KeywordService();
+            IEnumerable<KeyPhrase> keyPhraseList = service.CreateKeyPhraseList(topThreeReviewList);
+            var keywords = await service.GetKeyWordsFromCognitiveServices(keyPhraseList);
 
-            KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
+            //KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
 
-            var client = new HttpClient();
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            //var client = new HttpClient();
+            //var queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "2416a592074c4cde91bf255cb745ddaf");
+            //// Request headers
+            //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "2416a592074c4cde91bf255cb745ddaf");
 
-            var uri = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases?" + queryString;
+            //var uri = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases?" + queryString;
 
-            HttpResponseMessage response;
+            //HttpResponseMessage response;
 
-            var jsonData = JsonConvert.SerializeObject(jsonToSend);
+            //var jsonData = JsonConvert.SerializeObject(jsonToSend);
 
-            using (client)
-            {
-                response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
-            }
+            //using (client)
+            //{
+            //    response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
+            //}
 
-            var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
+            //var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
 
             _cache.Set("keywordcache", keywords, _policy);
 
             return View(keywords);
         }
+
      
     }
 }
