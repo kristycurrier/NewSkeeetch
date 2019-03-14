@@ -26,9 +26,7 @@ namespace Skeeetch.Controllers
 
 
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
-
         {
-
             var allTerms = string.Join("+", searchTerms.Terms); 
 
             ViewBag.Title = "Search Results";
@@ -60,13 +58,10 @@ namespace Skeeetch.Controllers
             _cache.Set("idList", businessListTopThree, _policy);
 
             return RedirectToAction("Reviews");
-
         }
 
         public async Task<ActionResult> Reviews()
         {
-
-
             List<string> businessList = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
@@ -83,10 +78,8 @@ namespace Skeeetch.Controllers
             }
 
             _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
-            _cache.Set("topThreeReviews", reviewListofTopThree, _policy);
 
             return RedirectToAction("Keyword");
-
         }
 
 
@@ -102,20 +95,17 @@ namespace Skeeetch.Controllers
             var business = result.Content.ReadAsAsync<Business>().Result;
 
             return View(business);
-
         }
 
         public async Task<ActionResult> Keyword()
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
 
-
             var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
             var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
             var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
-
                 topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
 
             var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
@@ -130,22 +120,6 @@ namespace Skeeetch.Controllers
 
             KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
 
-            
-            
-            //var keyPhraseList = new List<KeyPhrase>();
-            //keyPhraseList.Add(firstKeyPhrase);
-            //keyPhraseList.Add(secondKeyPhrase);
-            //keyPhraseList.Add(thirdKeyPhrase);
-
-            //var keyPhrasesToSend = new KeyPhraseRoot
-            //{
-            //    Documents = keyPhraseList
-            //};
-
-
-            //END OF TEST SET UP**************************************************************************
-            //*******************************************************************************************
-
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
@@ -156,17 +130,6 @@ namespace Skeeetch.Controllers
 
             HttpResponseMessage response;
 
-            // Request body
-
-            //firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
-            //secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
-            //thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
-
-            //string myJson = "{'documents': [{'language': 'en','id': '"+$"{firstYelpId}" +"','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '"+$"{secondYelpId}" + "','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '" + $"{thirdYelpId}" + "','text': '" + $"{thirdReviewSet}" + "'}]}";
-
-            //new Json method******************************************************************************************
-            //NEWS TEST METHOD****************************************************************************************
-
             var jsonData = JsonConvert.SerializeObject(jsonToSend);
 
             using (client)
@@ -174,106 +137,12 @@ namespace Skeeetch.Controllers
                 response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
             }
 
-            //***********************************************************************************************************
-            //**********************************************************************************************************
-
-            //using (client)
-            //{
-            //    response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
-            //}
-
             var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
 
             _cache.Set("keywordcache", keywords, _policy);
 
             return View(keywords);
-
         }
-
-        public ActionResult Results(string id)
-        {
-            var keywords = _cache.Get("keywordcache") as DocumentRoot;
-            //var business = _cache.Get("id") as BusinessRoot;
-            return View(keywords);
-        }
-
-
-        // GET: Yelp
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: Yelp/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Yelp/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Yelp/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Yelp/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Yelp/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Yelp/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Yelp/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+     
     }
 }
