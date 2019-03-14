@@ -15,7 +15,6 @@ namespace Skeeetch.Data
                 new Category{ID = 3, DisplayTerm = "Art", SearchTerm = "creative"},
                 new Category{ID = 4, DisplayTerm = "Relaxation", SearchTerm = "relaxing"},
                 new Category{ID = 5, DisplayTerm = "Active", SearchTerm = "excitement"},
-               
                 new Category{ID = 6, DisplayTerm = "Asian Food", SearchTerm = "asian"},
                 new Category{ID = 7, DisplayTerm = "Mexican Food", SearchTerm = "mexican"},
                 new Category{ID = 8, DisplayTerm = "Bar Food", SearchTerm = "bar"},
