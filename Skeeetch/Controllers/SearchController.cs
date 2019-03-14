@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using Skeeetch.Logic;
+using Skeeetch.ControllerLogic;
 
 namespace Skeeetch.Controllers
 {
@@ -30,7 +31,7 @@ namespace Skeeetch.Controllers
 
             var allTerms = string.Join("+", searchTerms.Terms); 
 
-            ViewBag.Title = "Search Results";
+          
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
@@ -164,91 +165,6 @@ namespace Skeeetch.Controllers
             return View(keywords);
 
         }
-
-        public ActionResult Results(string id)
-        {
-            var keywords = _cache.Get("keywordcache") as DocumentRoot;
-            //var business = _cache.Get("id") as BusinessRoot;
-            return View(keywords);
-        }
-
-
-        // GET: Yelp
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: Yelp/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Yelp/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Yelp/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Yelp/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Yelp/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Yelp/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Yelp/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }
