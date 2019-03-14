@@ -10,25 +10,13 @@ namespace Skeeetch.Logic
     {
         public static bool ListHasEnoughReviews(List<Business> businesses)
         {
-            bool moreThenThreeReviews = false;
-            List<Business> listToCheck = new List<Business>();
+            bool threeReviewsOrMore = false;
 
-            for (int i = 0; i < businesses.Count; i++)
+            if (businesses.Count >= 3)
             {
-
-                if (businesses.ElementAt(i).ReviewCount >= 3)
-                {
-                    listToCheck.Add(businesses.ElementAt(i));
-                }
+                threeReviewsOrMore = true;
             }
-
-            if (listToCheck.Count >= 3)
-            {
-                moreThenThreeReviews = true;
-            }
-            return moreThenThreeReviews;
+            return threeReviewsOrMore;
         }
-
-
     }
 }

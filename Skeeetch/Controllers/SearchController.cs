@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using Skeeetch.Logic;
-using Skeeetch.ControllerLogic;
+using Newtonsoft.Json;
 
 namespace Skeeetch.Controllers
 {
@@ -26,9 +26,7 @@ namespace Skeeetch.Controllers
 
 
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
-
         {
-
             var allTerms = string.Join("+", searchTerms.Terms); 
 
           
@@ -47,6 +45,10 @@ namespace Skeeetch.Controllers
 
             var validbusinessList = await newBusinessList.ReturnValidBusinessList(searchTerms, rawBusinessResultsList);
 
+            //var sortedBusniessList = Sorting.SortList(validbusinessList, searchTerms);
+            var sortList = new Sorting();
+            var sortedBusinessList = sortList.SortList(validbusinessList, searchTerms);
+
             List<string> businessListTopThree = new List<string>();
 
             businessListTopThree.Add(validbusinessList.ElementAt(0).YelpId);
@@ -56,13 +58,10 @@ namespace Skeeetch.Controllers
             _cache.Set("idList", businessListTopThree, _policy);
 
             return RedirectToAction("Reviews");
-
         }
 
         public async Task<ActionResult> Reviews()
         {
-
-
             List<string> businessList = _cache.Get("idList") as List<string>;
             List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
@@ -79,10 +78,8 @@ namespace Skeeetch.Controllers
             }
 
             _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
-            _cache.Set("topThreeReviews", reviewListofTopThree, _policy);
 
             return RedirectToAction("Keyword");
-
         }
 
 
@@ -98,25 +95,30 @@ namespace Skeeetch.Controllers
             var business = result.Content.ReadAsAsync<Business>().Result;
 
             return View(business);
-
         }
 
         public async Task<ActionResult> Keyword()
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
 
-
             var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
             var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
                 topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
             var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
-
                 topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
 
             var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
             var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
             var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
+
+            KeyPhrase firstKeyPhrase = new KeyPhrase("en", firstYelpId, firstReviewSet);
+            KeyPhrase secondKeyPhrase = new KeyPhrase("en", secondYelpId, secondReviewSet);
+            KeyPhrase thirdKeyPhrase = new KeyPhrase("en", thirdYelpId, thirdReviewSet);
+
+            IEnumerable<KeyPhrase> keyPhraseList = new KeyPhrase[] {firstKeyPhrase, secondKeyPhrase, thirdKeyPhrase };
+
+            KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
 
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -128,43 +130,19 @@ namespace Skeeetch.Controllers
 
             HttpResponseMessage response;
 
-            // Request body
-
-            string awkward = "I'm hoping this works.";
-            awkward = Regex.Replace(awkward, @"'", "");
-            firstReviewSet = Regex.Replace(firstReviewSet, @"'", "");
-            secondReviewSet = Regex.Replace(secondReviewSet, @"'", "");
-            thirdReviewSet = Regex.Replace(thirdReviewSet, @"'", "");
-
-            //string myWorkingJson = "{documents: [{'language': 'en','id': '1','text': 'Hello my name is Kristy! How are you? I wonder what breaks the Json.'},{'language': 'en','id': '2','text': 'Zack is also in here looking for some keywords too. Is this what breaks it?'}, {'language': 'en','id': '3','text': ' {awkward} '}]}";
-            string myJson = "{'documents': [{'language': 'en','id': '"+$"{firstYelpId}" +"','text': '" + $"{firstReviewSet}" + "'},{'language': 'en','id': '"+$"{secondYelpId}" + "','text': '" + $"{secondReviewSet}" + "'}, {'language': 'en','id': '" + $"{thirdYelpId}" + "','text': '" + $"{thirdReviewSet}" + "'}]}";
-
-
-            //string myJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstReviewSet.ToString() + "'}]}"; //, {'language': 'en','id': '2','text': '" + firstReviewSet.ToString() + "'}, {'language': 'en','id': '3','text': '" + firstReviewSet.ToString()  + "'}]}";
-            //string testJson = "{'documents': [{'language': 'en','id': '1','text': '" + firstYelpId + "'}]}";
-
-            //myJson.Replace("\n", String.Empty);
-
-            //string newJson = myJson;
-            //myWorkingJson = Regex.Replace(myWorkingJson, @"\n\n", " ");
-
+            var jsonData = JsonConvert.SerializeObject(jsonToSend);
 
             using (client)
             {
-                response = await client.PostAsync(uri, new StringContent(myJson, Encoding.UTF8, "application/json"));
+                response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
             }
 
             var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
-
-            //var info = keywords.Documents.FirstOrDefault<Document>();
-            //var info2 = keywords.Documents.ElementAt(1);
-
 
             _cache.Set("keywordcache", keywords, _policy);
 
             return View(keywords);
 
         }
-        
     }
 }
