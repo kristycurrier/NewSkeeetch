@@ -196,6 +196,10 @@
     <Compile Include="Models\ReviewRoot.cs" />
     <Compile Include="Models\SearchTerms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BusinessService.cs" />
+    <Compile Include="Services\FindBusinessService.cs" />
+    <Compile Include="Services\KeywordService.cs" />
+    <Compile Include="Services\ReviewService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
