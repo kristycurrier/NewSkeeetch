@@ -7,7 +7,7 @@ namespace Skeeetch.Models
 {
     public class SearchTerms
     {
-        public string[] Terms { get; set; }
+        public int[] Terms { get; set; }
         public int Price { get; set; }
         public string Adventure { get; set; }
         public string City { get; set; }

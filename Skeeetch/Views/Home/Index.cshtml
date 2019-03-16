@@ -1,15 +1,12 @@
-﻿<!--Here is what is going to go on the main view page:
-    Welcome message
-    Three radio boxes
-    1. price
-    2. location
-    3. keywords
-    -->
+﻿@model IEnumerable<Skeeetch.Models.Category>
+@using Skeeetch.Data;
 
 <h1>Hello and Welcome to the Skeeetch FUN TIME Generator!</h1>
 <h2>This is all lorem ipsum for now. Real content coming soon! Check out our amazing forms below! The time for making this all look beautiful will come later.</h2>
 <br />
 <br />
+
+
 
 <div>
     <form action="/search/findbusinesses/" method="post">
@@ -26,9 +23,9 @@
             Where do I want to go?<br>
 
             City:
-            <input type="text" name="City" ><br>
+            <input type="text" name="City"><br>
             State:
-            <input type="text" name="State" >
+            <input type="text" name="State">
 
         </div><br />
         <div>
@@ -42,138 +39,140 @@
             <input type="radio" name="adventure" value="exciting">Let's DO THIS!<br>
             <input type="radio" name="adventure" value="sketch">I make bad life decisions<br>
 
+  
+
         </div><br />
-              <div>
-                  What am I looking for?
+        <div>
+            What am I looking for?
 
 
-                  <label class="container">
-                      Drinks
-                      <input type="checkbox" checked="checked" name="Terms" value="booze">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Food
-                      <input type="checkbox" name="Terms" value="food">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Art
-                      <input type="checkbox" name="Terms" value="creative">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Relaxation
-                      <input type="checkbox" name="Terms" value="relaxing">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Active
-                      <input type="checkbox" name="Terms" value="excitment">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Asian Food
-                      <input type="checkbox" name="Terms" value="asian">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Mexican Food
-                      <input type="checkbox" name="Terms" value="mexican">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Bar Food
-                      <input type="checkbox" name="Terms" value="bar">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Upscale
-                      <input type="checkbox" name="Terms" value="upscale">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Atmosphere
-                      <input type="checkbox" name="Terms" value="atmosphere">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Modern
-                      <input type="checkbox" name="Terms" value="modern">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Classic
-                      <input type="checkbox" name="Terms" value="classic">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Late Night
-                      <input type="checkbox" name="Terms" value="late">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Dancing
-                      <input type="checkbox" name="Terms" value="dancing">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Karaoke
-                      <input type="checkbox" name="Terms" value="karaoke">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Pool
-                      <input type="checkbox" name="Terms" value="pool">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Kid Friendly
-                      <input type="checkbox" name="Terms" value="kids">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Romantic
-                      <input type="checkbox" name="Terms" value="romantic">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      New
-                      <input type="checkbox" name="Terms" value="new">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Italian Food
-                      <input type="checkbox" name="Terms" value="italian">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Pizza
-                      <input type="checkbox" name="Terms" value="pizza">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Indian Food
-                      <input type="checkbox" name="Terms" value="indian">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Hookah Bar
-                      <input type="checkbox" name="Terms" value="hookah">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Casino
-                      <input type="checkbox" name="Terms" value="casino">
-                      <span class="checkmark"></span>
-                  </label>
-                  <label class="container">
-                      Mediterranean Food
-                      <input type="checkbox" name="Terms" value="mediterranean">
-                      <span class="checkmark"></span>
-                  </label>
+            <label class="container">
+                Drinks
+                <input type="checkbox" checked="checked" name="Terms" value=1>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Food
+                <input type="checkbox" name="Terms" value=2>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Art
+                <input type="checkbox" name="Terms" value=3>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Relaxation
+                <input type="checkbox" name="Terms" value=4>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Active
+                <input type="checkbox" name="Terms" value=5>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Asian Food
+                <input type="checkbox" name="Terms" value=6>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Mexican Food
+                <input type="checkbox" name="Terms" value=7>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Bar Food
+                <input type="checkbox" name="Terms" value=8>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Upscale
+                <input type="checkbox" name="Terms" value=9>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Atmosphere
+                <input type="checkbox" name="Terms" value=10>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Modern
+                <input type="checkbox" name="Terms" value=11>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Classic
+                <input type="checkbox" name="Terms" value=12>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Late Night
+                <input type="checkbox" name="Terms" value=13>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Dancing
+                <input type="checkbox" name="Terms" value=14>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Karaoke
+                <input type="checkbox" name="Terms" value=15>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Pool
+                <input type="checkbox" name="Terms" value=16>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Kid Friendly
+                <input type="checkbox" name="Terms" value=17>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Romantic
+                <input type="checkbox" name="Terms" value=18>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                New
+                <input type="checkbox" name="Terms" value=19>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Italian Food
+                <input type="checkbox" name="Terms" value=20>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Pizza
+                <input type="checkbox" name="Terms" value=21>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Indian Food
+                <input type="checkbox" name="Terms" value=22>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Hookah Bar
+                <input type="checkbox" name="Terms" value=23>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Casino
+                <input type="checkbox" name="Terms" value=24>
+                <span class="checkmark"></span>
+            </label>
+            <label class="container">
+                Mediterranean Food
+                <input type="checkbox" name="Terms" value=25>
+                <span class="checkmark"></span>
+            </label>
 
-              </div>
+        </div>
 
 
         <input type="submit" name="btn-group" value="Roll the dice!" /><br />

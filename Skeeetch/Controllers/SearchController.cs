@@ -25,13 +25,16 @@ namespace Skeeetch.Controllers
         private readonly MemoryCache _cache = MemoryCache.Default;
         private readonly CacheItemPolicy _policy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromHours(1) };
 
+        private readonly SkeeetchContext _context = new SkeeetchContext();
+
 
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
         {
             var allTerms = string.Join("+", searchTerms.Terms);
             var url = CreateFindBuisnessUrl(searchTerms);
+          
+            var client = new HttpClient();
 
-            // var client = new HttpClient();
 
             // client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
@@ -55,16 +58,9 @@ namespace Skeeetch.Controllers
             //List<string> businessListTopThree = new List<string>();
             List<string> businessListTopThree = GetTopThreeFromSortedList(sortedBusinessList);
 
-<<<<<<< HEAD
-            businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
-            businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
-            businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
-=======
-
             //businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
             //businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
             //businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
->>>>>>> 1aa86cb12db77c99aaaf6c6ff2dab58522b2ff53
 
             _cache.Set("idList", businessListTopThree, _policy);
 
@@ -159,15 +155,23 @@ namespace Skeeetch.Controllers
             _cache.Set("keywordcache", keywords, _policy);
 
             return View(keywords);
+
         }
 
+
         public string CreateFindBuisnessUrl(SearchTerms searchTerms)
-
-
         {
-            var allTerms = string.Join("+", searchTerms.Terms);
+            List<string> searchTermWordList = new List<string>();
 
-
+            for (int i = 0; i < searchTerms.Terms.Length; i++)
+            {
+                var iD = searchTerms.Terms[i];
+                var dataInput = _context.Categories.First(t => t.ID == iD);
+                searchTermWordList.Add(dataInput.SearchTerm);
+            }
+          
+            var allTerms = string.Join("+", searchTermWordList);
+            
             var url = $"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}";
 
             return url;
@@ -198,6 +202,7 @@ namespace Skeeetch.Controllers
 
             return businessListTopThree;
         }
+
 
     }
 }
