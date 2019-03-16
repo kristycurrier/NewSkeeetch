@@ -9,9 +9,18 @@ namespace Skeeetch.Controllers
 {
     public class HomeController : Controller
     {
+
         public ActionResult Index()
         {
+           var db = new SkeeetchContext();
+          //  var category = db.Categories.FirstOrDefault();
+           
+          //  var categories = db.Categories;
+
             return View();
+
+
+
         }
     }
 }
