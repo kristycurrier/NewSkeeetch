@@ -58,7 +58,6 @@ namespace Skeeetch.Controllers
             //List<string> businessListTopThree = new List<string>();
             List<string> businessListTopThree = GetTopThreeFromSortedList(sortedBusinessList);
 
-
             //businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
             //businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
             //businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);

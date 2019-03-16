@@ -63,5 +63,29 @@ namespace Skeeetch.Services
 
             return keywords;
         }
+
+        public DocumentRoot RemoveBusinessName(DocumentRoot keyWords, BusinessRoot listOfBusinesses)
+        {
+            for (int i = 0; i < listOfBusinesses.businesses.Count(); i++)
+            {
+                var nameOfBusiness = listOfBusinesses.businesses.ElementAt(0).Name;
+                string[] words = nameOfBusiness.Split(' ');
+
+                for (int j = 0; j < keyWords.Documents.Count(); j++)
+                {
+                    var keyWord = keyWords.Documents.ElementAt(i).KeyPhrases.ElementAt(j);
+
+                    foreach (var word in words)
+                    {
+                        if (word == keyWord)
+                        {
+                            keyWords.Documents.ElementAt(i).KeyPhrases.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            return keyWords;
+        }
+
     }
 }
