@@ -30,39 +30,21 @@ namespace Skeeetch.Controllers
 
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
         {
-            var allTerms = string.Join("+", searchTerms.Terms);
             var url = CreateFindBuisnessUrl(searchTerms);
-          
-            var client = new HttpClient();
 
-
-            // client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
-            // //var result = await client.GetAsync("https://api.yelp.com/v3/businesses/search?term=taco&location=detroit&price=1");
-            //// var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}");
-            // var result = await client.GetAsync(url);
-
-            // var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
-
-            // List<Business> rawBusinessResultsList = businessResults.Result.businesses.ToList();
             List<Business> rawBusinessResultsList = await CreateBuisnessListFromApi(url);
 
             BusinessList newBusinessList = new BusinessList();
 
             var validBusinessList = await newBusinessList.ReturnValidBusinessList(searchTerms, rawBusinessResultsList);
 
-            //var sortedBusniessList = Sorting.SortList(validbusinessList, searchTerms);
             var sortList = new Sorting();
             var sortedBusinessList = sortList.SortList(validBusinessList, searchTerms);
 
-            //List<string> businessListTopThree = new List<string>();
             List<string> businessListTopThree = GetTopThreeFromSortedList(sortedBusinessList);
 
-            //businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
-            //businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
-            //businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
-
             _cache.Set("idList", businessListTopThree, _policy);
+            _cache.Set("sortedBusinessList", sortedBusinessList, _policy);
 
             return RedirectToAction("Reviews");
 
@@ -93,7 +75,7 @@ namespace Skeeetch.Controllers
         }
 
 
-        public ActionResult DisplayBusiness(Document document)
+        public ActionResult Business(Document document)
         {
             int num = Int32.Parse(document.YelpId);
             List<string> businessList = _cache.Get("idList") as List<string>;
@@ -110,47 +92,12 @@ namespace Skeeetch.Controllers
         public async Task<ActionResult> Keyword()
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
+            var sortedList = _cache.Get("sortedBusinessList") as List<Business>;
 
-            //var firstReviewSet = topThreeReviewList.ElementAt(0).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).Text +
-            //    topThreeReviewList.ElementAt(0).Reviews.ElementAt(2).Text;
-            //var secondReviewSet = topThreeReviewList.ElementAt(1).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).Text +
-            //    topThreeReviewList.ElementAt(1).Reviews.ElementAt(2).Text;
-            //var thirdReviewSet = topThreeReviewList.ElementAt(2).Reviews.ElementAt(0).Text + topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).Text +
-            //    topThreeReviewList.ElementAt(2).Reviews.ElementAt(2).Text;
-
-            //var firstYelpId = topThreeReviewList.ElementAt(0).Reviews.ElementAt(1).YelpId;
-            //var secondYelpId = topThreeReviewList.ElementAt(1).Reviews.ElementAt(1).YelpId;
-            //var thirdYelpId = topThreeReviewList.ElementAt(2).Reviews.ElementAt(1).YelpId;
-
-            //KeyPhrase firstKeyPhrase = new KeyPhrase("en", firstYelpId, firstReviewSet);
-            //KeyPhrase secondKeyPhrase = new KeyPhrase("en", secondYelpId, secondReviewSet);
-            //KeyPhrase thirdKeyPhrase = new KeyPhrase("en", thirdYelpId, thirdReviewSet);
-
-            //IEnumerable<KeyPhrase> keyPhraseList = new KeyPhrase[] {firstKeyPhrase, secondKeyPhrase, thirdKeyPhrase };
             KeywordService service = new KeywordService();
             IEnumerable<KeyPhrase> keyPhraseList = service.CreateKeyPhraseList(topThreeReviewList);
             var keywords = await service.GetKeyWordsFromCognitiveServices(keyPhraseList);
-
-            //KeyPhraseRoot jsonToSend = new KeyPhraseRoot { Documents = keyPhraseList };
-
-            //var client = new HttpClient();
-            //var queryString = HttpUtility.ParseQueryString(string.Empty);
-
-            //// Request headers
-            //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "2416a592074c4cde91bf255cb745ddaf");
-
-            //var uri = "https://eastus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases?" + queryString;
-
-            //HttpResponseMessage response;
-
-            //var jsonData = JsonConvert.SerializeObject(jsonToSend);
-
-            //using (client)
-            //{
-            //    response = await client.PostAsync(uri, new StringContent(jsonData, UnicodeEncoding.UTF8, "application/json"));
-            //}
-
-            //var keywords = await response.Content.ReadAsAsync<DocumentRoot>();
+            keywords = service.RemoveBusinessName(keywords, sortedList);
 
             _cache.Set("keywordcache", keywords, _policy);
 
