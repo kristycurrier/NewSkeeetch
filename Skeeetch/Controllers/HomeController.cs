@@ -11,6 +11,8 @@ namespace Skeeetch.Controllers
     {
         public ActionResult Index()
         {
+            SkeeetchContext db = new SkeeetchContext();
+            var hi = db.Categories.FirstOrDefault();
             return View();
         }
     }

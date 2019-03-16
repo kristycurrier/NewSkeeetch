@@ -52,9 +52,9 @@ namespace Skeeetch.Controllers
 
             List<string> businessListTopThree = new List<string>();
 
-            businessListTopThree.Add(validbusinessList.ElementAt(0).YelpId);
-            businessListTopThree.Add(validbusinessList.ElementAt(1).YelpId);
-            businessListTopThree.Add(validbusinessList.ElementAt(2).YelpId);
+            businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
+            businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
+            businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
 
             _cache.Set("idList", businessListTopThree, _policy);
 
