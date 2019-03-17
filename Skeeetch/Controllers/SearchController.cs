@@ -93,7 +93,7 @@ namespace Skeeetch.Controllers
         }
 
 
-        public ActionResult DisplayBusiness(Document document)
+        public ActionResult Business(Document document)
         {
             int num = Int32.Parse(document.YelpId);
             List<string> businessList = _cache.Get("idList") as List<string>;
