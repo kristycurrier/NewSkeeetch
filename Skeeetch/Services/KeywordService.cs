@@ -64,27 +64,37 @@ namespace Skeeetch.Services
             return keywords;
         }
 
-        public DocumentRoot RemoveBusinessName(DocumentRoot keyWords, BusinessRoot listOfBusinesses)
+        public DocumentRoot RemoveBusinessName(DocumentRoot keyWords, List<Business> listOfBusinesses)
         {
-            for (int i = 0; i < listOfBusinesses.businesses.Count(); i++)
+
+            for (int i = 0; i < 3; i++)
             {
-                var nameOfBusiness = listOfBusinesses.businesses.ElementAt(0).Name;
+                var nameOfBusiness = listOfBusinesses.ElementAt(i).Name;
                 string[] words = nameOfBusiness.Split(' ');
 
-                for (int j = 0; j < keyWords.Documents.Count(); j++)
+                foreach (var business in keyWords.Documents)
                 {
-                    var keyWord = keyWords.Documents.ElementAt(i).KeyPhrases.ElementAt(j);
-
-                    foreach (var word in words)
-                    {
-                        if (word == keyWord)
-                        {
-                            keyWords.Documents.ElementAt(i).KeyPhrases.RemoveAt(j);
-                        }
+                    for (int j = 0; j < words.Length; j++)
+                    {                  
+                        business.KeyPhrases.RemoveAll(x => x.Contains(words[j]));
                     }
                 }
+                //for (int j = 0; j < keyWords.Documents.ElementAt(i).KeyPhrases.Count(); j++)
+                //{
+                //    var keyWord = keyWords.Documents.ElementAt(i).KeyPhrases.ElementAt(j);
+
+                //    foreach (var word in words)
+                //    {
+                //        if (word == keyWord)
+                //        {
+                //            keyWords.Documents.ElementAt(i).KeyPhrases.RemoveAt(j);
+                //        }
+                //    }
+                //}
             }
             return keyWords;
+
+
         }
 
     }
