@@ -66,7 +66,6 @@ namespace Skeeetch.Services
 
         public DocumentRoot RemoveBusinessName(DocumentRoot keyWords, List<Business> listOfBusinesses)
         {
-
             for (int i = 0; i < 3; i++)
             {
                 var nameOfBusiness = listOfBusinesses.ElementAt(i).Name;
@@ -93,9 +92,6 @@ namespace Skeeetch.Services
                 //}
             }
             return keyWords;
-
-
         }
-
     }
 }

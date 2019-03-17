@@ -22,20 +22,28 @@ namespace Skeeetch.Logic
             if (Validation.ListHasEnoughReviews(rawBusinessList) == false)
             {
                 newBusinessList = await SearchWithNewMoneyVariables(searchTerms, rawBusinessList);
+
+                if (Validation.ListHasEnoughReviews(newBusinessList))
+                {
+                    validBusinessList = newBusinessList;
+                    return validBusinessList;
+                }
+                else
+                {
+                    //send to link
+                }
             }
 
-            if(Validation.ListHasEnoughReviews(newBusinessList))
-            {
-                validBusinessList = newBusinessList;
-            }
-
-            if(Validation.ListHasEnoughReviews(rawBusinessList))
+            if (Validation.ListHasEnoughReviews(rawBusinessList))
             {
                 validBusinessList = rawBusinessList;
             }
+            else
+            {
+                //send to link
+            }
 
             return validBusinessList;
-
         }
 
         public async Task<List<Business>> SearchWithNewMoneyVariables(SearchTerms searchTerms, List<Business> businesses)

@@ -30,6 +30,11 @@ namespace Skeeetch.Controllers
 
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
         {
+            if(!ModelState.IsValid)
+            {
+                return RedirectToAction("TryAgain");
+            }
+
             var url = CreateFindBuisnessUrl(searchTerms);
 
             List<Business> rawBusinessResultsList = await CreateBuisnessListFromApi(url);
@@ -103,6 +108,12 @@ namespace Skeeetch.Controllers
 
             return View(keywords);
 
+        }
+
+        public ActionResult TryAgain()
+        {
+
+            return View();
         }
 
 

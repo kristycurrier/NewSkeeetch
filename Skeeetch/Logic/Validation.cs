@@ -18,5 +18,14 @@ namespace Skeeetch.Logic
             }
             return threeReviewsOrMore;
         }
+
+        public bool SearchTermsIsValid(SearchTerms searchTerms)
+        {
+            bool valid = false;
+
+            //if (searchTerms.Adventure.Count()>0 && searchTerms.City.Count()>1 && searchTerms.Price.//
+
+            return valid;
+        }
     }
 }
