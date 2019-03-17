@@ -27,7 +27,6 @@ namespace Skeeetch.Controllers
 
         private readonly SkeeetchContext _context = new SkeeetchContext();
 
-
         public async Task<ActionResult> FindBusinesses(SearchTerms searchTerms)
         {
             if(!ModelState.IsValid)
@@ -35,27 +34,28 @@ namespace Skeeetch.Controllers
                 return RedirectToAction("TryAgain");
             }
 
-            var url = CreateFindBuisnessUrl(searchTerms);
-
-            List<Business> rawBusinessResultsList = await CreateBuisnessListFromApi(url);
+            FindBusinessService businessService = new FindBusinessService();
+            var url = businessService.CreateFindBuisnessUrl(searchTerms);
+            List<Business> rawBusinessResultsList = await businessService.CreateBuisnessListFromApi(url);
 
             BusinessList newBusinessList = new BusinessList();
-
             var validBusinessList = await newBusinessList.ReturnValidBusinessList(searchTerms, rawBusinessResultsList);
+            if (validBusinessList == null)
+            {
+                return RedirectToAction("TryAgain");
+            }
 
             var sortList = new Sorting();
             var sortedBusinessList = sortList.SortList(validBusinessList, searchTerms);
 
-            List<string> businessListTopThree = GetTopThreeFromSortedList(sortedBusinessList);
+
+            List<string> businessListTopThree = businessService.GetTopThreeFromSortedList(sortedBusinessList);
 
             _cache.Set("idList", businessListTopThree, _policy);
             _cache.Set("sortedBusinessList", sortedBusinessList, _policy);
 
-            return RedirectToAction("Reviews");
-
-      
+            return RedirectToAction("Reviews");      
         }
-
 
         public async Task<ActionResult> Reviews()
         {
@@ -79,21 +79,6 @@ namespace Skeeetch.Controllers
             return RedirectToAction("Keyword");
         }
 
-
-        public ActionResult Business(Document document)
-        {
-            int num = Int32.Parse(document.YelpId);
-            List<string> businessList = _cache.Get("idList") as List<string>;
-            var id = businessList[num];
-            ViewBag.Title = "Business Info";
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-            var result = client.GetAsync($"https://api.yelp.com/v3/businesses/{id}").Result;
-            var business = result.Content.ReadAsAsync<Business>().Result;
-
-            return View(business);
-        }
-
         public async Task<ActionResult> Keyword()
         {
             var topThreeReviewList = _cache.Get("topThreeReviewList") as List<ReviewRoot>;
@@ -110,6 +95,23 @@ namespace Skeeetch.Controllers
 
         }
 
+        public async Task<ActionResult> Business(Document document)
+        {
+            ViewBag.Title = "Business Info";
+            int num = Int32.Parse(document.YelpId);
+            List<string> businessList = _cache.Get("idList") as List<string>;
+
+            BusinessService businessService = new BusinessService();
+            var business = await businessService.ReturnBusiness(businessList, num);
+            //var id = businessList[num];
+            //var client = new HttpClient();
+            //client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
+            //var result = client.GetAsync($"https://api.yelp.com/v3/businesses/{id}").Result;
+            //var business = result.Content.ReadAsAsync<Business>().Result;
+
+            return View(business);
+        }
+
         public ActionResult TryAgain()
         {
 
@@ -117,49 +119,49 @@ namespace Skeeetch.Controllers
         }
 
 
-        public string CreateFindBuisnessUrl(SearchTerms searchTerms)
-        {
-            List<string> searchTermWordList = new List<string>();
+        //public string CreateFindBuisnessUrl(SearchTerms searchTerms)
+        //{
+        //    List<string> searchTermWordList = new List<string>();
 
-            for (int i = 0; i < searchTerms.Terms.Length; i++)
-            {
-                var iD = searchTerms.Terms[i];
-                var dataInput = _context.Categories.First(t => t.ID == iD);
-                searchTermWordList.Add(dataInput.SearchTerm);
-            }
-          
-            var allTerms = string.Join("+", searchTermWordList);
-            
-            var url = $"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}";
+        //    for (int i = 0; i < searchTerms.Terms.Length; i++)
+        //    {
+        //        var iD = searchTerms.Terms[i];
+        //        var dataInput = _context.Categories.First(t => t.ID == iD);
+        //        searchTermWordList.Add(dataInput.SearchTerm);
+        //    }
 
-            return url;
-        }
+        //    var allTerms = string.Join("+", searchTermWordList);
 
-        public async Task<List<Business>> CreateBuisnessListFromApi(string url)
-        {
-            var client = new HttpClient();
+        //    var url = $"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}";
 
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
+        //    return url;
+        //}
 
-            var result = await client.GetAsync(url);
+        //public async Task<List<Business>> CreateBuisnessListFromApi(string url)
+        //{
+        //    var client = new HttpClient();
 
-            var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
+        //    client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
-            List<Business> businessList = businessResults.Result.businesses.ToList();
+        //    var result = await client.GetAsync(url);
 
-            return businessList;
-        }
+        //    var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
 
-        public List<string> GetTopThreeFromSortedList(List<Business> sortedBusinessList)
-        {
-            List<string> businessListTopThree = new List<string>();
+        //    List<Business> businessList = businessResults.Result.businesses.ToList();
 
-            businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
-            businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
-            businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
+        //    return businessList;
+        //}
 
-            return businessListTopThree;
-        }
+        //public List<string> GetTopThreeFromSortedList(List<Business> sortedBusinessList)
+        //{
+        //    List<string> businessListTopThree = new List<string>();
+
+        //    businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
+        //    businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
+        //    businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
+
+        //    return businessListTopThree;
+        //}
 
 
     }

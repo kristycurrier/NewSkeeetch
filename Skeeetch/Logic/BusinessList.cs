@@ -30,7 +30,7 @@ namespace Skeeetch.Logic
                 }
                 else
                 {
-                    //send to link
+                    return null;
                 }
             }
 
@@ -40,7 +40,7 @@ namespace Skeeetch.Logic
             }
             else
             {
-                //send to link
+                return null;
             }
 
             return validBusinessList;

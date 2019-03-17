@@ -18,7 +18,8 @@ namespace Skeeetch.Models
         public string Adventure { get; set; }
 
         [Required(ErrorMessage = "Please enter valid city")]
-        [Range(3,50, ErrorMessage ="Please enter valid city")]
+        [MaxLength(50, ErrorMessage ="Please enter valid city")]
+        [MinLength(3, ErrorMessage ="Please enter valid city")]
         public string City { get; set; }
 
         [Required(ErrorMessage = "Please enter valid state!")]
