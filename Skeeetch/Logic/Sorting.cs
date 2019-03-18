@@ -34,6 +34,7 @@ namespace Skeeetch.Logic
                     results = sort.SketchSort(businesses);
                     break;
                 default:
+                    results = null;
                     break;
                 }
 

@@ -47,6 +47,10 @@ namespace Skeeetch.Controllers
 
             var sortList = new Sorting();
             var sortedBusinessList = sortList.SortList(validBusinessList, searchTerms);
+            if(sortedBusinessList==null)
+            {
+                return RedirectToAction("TryAgain");
+            }
 
 
             List<string> businessListTopThree = businessService.GetTopThreeFromSortedList(sortedBusinessList);

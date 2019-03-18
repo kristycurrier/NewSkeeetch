@@ -11,7 +11,7 @@ namespace Skeeetch.Services
     public class BusinessService
     {
 
-        public async Task<Business> ReturnBusiness ( List<string> businessList ,int num)
+        public async Task<Business> ReturnBusiness (List<string> businessList ,int num)
         {
             var id = businessList[num];
             var client = new HttpClient();
