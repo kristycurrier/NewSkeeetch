@@ -3,50 +3,63 @@
 @{
     ViewBag.Title = "KeywordView";
 }
-
-<h2>KeywordView</h2>
+<br />
+<h2>Selection Time!</h2>
 
 <div>
-    <h4>Document</h4>
-    <hr />
+    <h4>Here are the top three options based on your selection input. They are being represented by the key sentiment keywords from user's reviews of the establishments. Click on the one that most speaks to you to see where you will end up!</h4>
+   <br />
     <dl class="dl-horizontal">
+       
+        @*@Html.DisplayNameFor(model => model.Documents.FirstOrDefault().YelpId)*@
+        
+        
+        <dd class="boxyBox3">
+            <div class="bigBoldText">
+                <a href="@Url.Action("Business", "Search", new { YelpId = 0})" class="button hvr-pulse-grow">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[i])
 
-        @Html.DisplayNameFor(model => model.Documents.FirstOrDefault().YelpId)
-        <dd>
-            <a href="@Url.Action("Business", "Search", new { YelpId = 0})">
-                @for (int i = 0; i < 3; i++)
-                {
-                    @Html.DisplayFor(model => model.Documents.ElementAt(0).KeyPhrases[i])
-                
-                <br />
-                }</a>
-            </dd>
-<br /> <br />       
-       <dd>
-           <a href="@Url.Action("Business", "Search", new { YelpId = 1})">
-               @for (int i = 0; i < 3; i++)
-               {
-                   {
-                       @Html.DisplayFor(model => model.Documents.ElementAt(1).KeyPhrases[i])
-                       <br />
+                        <br />
+                    }
+                </a>
+            </div>
 
-                   }
-               }
-           </a>
-           </dd>
-<br /><br />
-      <dd>
-          <a href="@Url.Action("Business", "Search", new { YelpId = 2})">
-              @for (int i = 0; i < 3; i++)
-              {
-                  {
+        </dd>
+      
+        <dd class="boxyBox3">
+            <div class="bigBoldText">
+                <a href="@Url.Action("Business", "Search", new { YelpId = 1})" class="button hvr-pulse-grow">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        {
+                            @Html.DisplayFor(model => model.Documents.ElementAt(1).KeyPhrases[i])
+                            <br />
 
-                      @Html.DisplayFor(model => model.Documents.ElementAt(2).KeyPhrases[i])
+                        }
+                    }
+                </a>
+                </div>
+        </dd>
 
-                      <br />
-                  }
-              
-          }</a>
-      </dd>
+        <dd class="boxyBox3">
+            <div class="bigBoldText">
+                <a href="@Url.Action("Business", "Search", new { YelpId = 2})" class="button hvr-pulse-grow">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        {
+
+                            @Html.DisplayFor(model => model.Documents.ElementAt(2).KeyPhrases[i])
+
+                            <br />
+                        }
+
+                    }
+                </a>
+                </div>
+        </dd>
+        
     </dl>
+    
 </div>

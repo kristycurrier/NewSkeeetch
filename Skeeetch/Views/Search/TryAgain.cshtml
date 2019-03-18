@@ -1,10 +1,15 @@
 ﻿
 @{
-    ViewBag.Title = "TryAgain";
+    ViewBag.Title = "Try Again";
 }
 
-<h2>TryAgain</h2>
 
+<br />
+<br />
+<br />
+<br />
 
-Sorry, looks like you entered some info that couldn't find results.  Please try again!
+<h2>Try Again</h2>
 
+Sorry, looks like you entered some info that couldn't find results.  Please click the button below try again!<br /><br />
+<input type="button" value="Redo" class="btn btn-outline-dark" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");" />
