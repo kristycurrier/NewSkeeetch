@@ -41,7 +41,7 @@ textarea {
     left: -52px;
     width: 45px;
     height: 25px;
-    background-color: #A8AAC1;
+    background-color: darkslategray;
     border-radius: 50px;
 }
 
@@ -50,13 +50,13 @@ textarea {
     width: 17px;
     height: 17px;
     border-radius: 10px;
-    background-color: #6C788A;
+    background-color: #A8AAC1;
     transition: left .25s, background-color .25s;
 }
 
 input[type="radio"]:checked + label span.radio::after {
     left: -27px;
-    background-color: #EBFF43;
+    background-color: #50e0ca;
 }
 .container span.checkbox::before {
     width: 27px;
@@ -69,7 +69,7 @@ input[type="radio"]:checked + label span.radio::after {
 }
 
 .container span.checkbox:hover::before {
-    border: 3px solid #F0FF76;
+    border: 3px solid #e06004 /*#F0FF76*/;
 }
 
 .container span.checkbox::after {
@@ -82,7 +82,7 @@ input[type="radio"]:checked + label span.radio::after {
 }
 
 input[type="checkbox"]:checked + label span.checkbox::after {
-    color: #62AFFF;
+    color: #50e0ca;
 }
 
 /*Styling here form making boxes fluid*/
@@ -111,7 +111,7 @@ input[type=text] {
     border: 0;
     border-bottom: 2px solid black;
     border-color: none;
-    background-color: none;
+    background-color: #b4dfe5;
     font-size: 30px;
 }
 
@@ -119,4 +119,119 @@ input[type=text] {
     display: inline-block;
     width: 526px;
     margin-right: -4px;
+    background-color: #b4dfe5;
+}
+
+/*Background color work here*/
+.colorSplashSecond {
+    border: 0;
+    padding: 0;
+   
+}
+
+.colorSplashSecondary {
+    border: 0;
+    padding: 0;
+   
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+body {
+    background-color: #B4dfe5;
+}
+
+/*form text styling after here*/
+
+.formTextStyle {
+    font-size: 1.15em;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.bigBoldText {
+    font-size: 2.0em;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.headline {
+    font-size: 1.25em;
+    font-weight: 500;
+  
+}
+
+.cautionText {
+    font-size: .95em;
+    margin: 0;
+}
+
+/*Link styling form the choice page*/
+
+@-webkit-keyframes hvr-pulse-grow {
+    to {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+
+@keyframes hvr-pulse-grow {
+    to {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+}
+
+.hvr-pulse-grow {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    text-decoration-color: black;
+    text-emphasis-color: #e06004;
+    text-align: center;
+    background-color: gray;
+    color: black;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .hvr-pulse-grow:hover, .hvr-pulse-grow:focus, .hvr-pulse-grow:active {
+        -webkit-animation-name: hvr-pulse-grow;
+        animation-name: hvr-pulse-grow;
+        -webkit-animation-duration: 0.3s;
+        animation-duration: 0.3s;
+        -webkit-animation-timing-function: linear;
+        animation-timing-function: linear;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        animation-direction: alternate;
+        text-align: center;
+        text-decoration-color: black;
+        text-emphasis-color: darkslategrey;
+        background-color: gray;
+        color: black;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    /*image styling*/
+
+#myImage1 {
+    max-height: 500px;
+    max-width: 500px;
+    float: right;
 }

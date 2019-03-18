@@ -3,44 +3,43 @@
 @{
     ViewBag.Title = "Business";
 }
-
-<h2>Business</h2>
+<br />
+<h2>Your selection</h2>
 
 <div>
-    <h4>Business</h4>
+    <h4>Based on your serch criteria this is where you want to be tonight!</h4>
     <hr />
     <dl class="dl-horizontal">
 
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd>
+        <dd class="bigBoldText">
             @Html.DisplayFor(model => model.Name)
         </dd>
 
         <dd>
-            <img src="@Html.DisplayFor(model => model.ImageUrl)" />
+            <img id="myImage1" src="@Html.DisplayFor(model => model.ImageUrl)" />
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DisplayPhone)
+            Phone:
         </dt>
         <dd>
             @Html.DisplayFor(model => model.DisplayPhone)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.LocationInfo)
+            Adress:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LocationInfo.Adress)
+            @Html.DisplayFor(model => model.LocationInfo.DisplayAddress[0])
             @Html.DisplayFor(model => model.LocationInfo.City)
-
-
         </dd>
-
+        <dt>
+           
+        </dt>
+        <dd>
+            <input type="button" value="Again!" class="btn btn-outline-dark" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");" />
+        </dd>
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

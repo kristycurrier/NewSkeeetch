@@ -1,79 +1,79 @@
 ﻿@using Skeeetch.Models
 @model SearchTerms
 
-<h1>Hello and Welcome to the Skeeetch FUN TIME Generator!</h1>
-<h2>This is all lorem ipsum for now. Real content coming soon! Check out our amazing forms below! The time for making this all look beautiful will come later.</h2>
 <br />
-<br />
+<h1>Hello and Welcome to Skeeetch!</h1>
+<p class="headline">Stuck in a rut? Keep going to the same places every weekend? You've come to the right place! Get outside your comfort zones and habits. Simply fill out the form below and we'll present you three options that best match your input. And here's the best part: We'll present those options to you in a fashion where you will not know the name of your selection until after you click on it! Trust us, it's a fun process. Give it a try!</p>
 
 
 
+<hr />
 <div>
     <form action="/search/findbusinesses/" method="post">
         @*Section where I set up the first boxy box3*@
 
 
         <div class="boxyBox3">
-            Where do I want to go?<br />
-            <section class="advancedSearchTextbox">
-                City:<br />
-                <input type="text" name="City"><br>
-                State:<br />@Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-                <input type="text" name="State">
-            </section>
+            <p class="formTextStyle">Where do I want to go?</p>
+                <section class="advancedSearchTextbox">
+                    City:<br />
+                    <input type="text" name="City"><br>
+                    State Abbreviation:<br />@Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                    <input type="text" name="State">
+                </section>
         </div>
 
 
 
         <div class="boxyBox3">
-            How much do I want to spend?
-            <section id="first" class="section">
-                <div class="container">
-                    <input type="radio" name="price" id="radio-1" value=1>
-                    <label for="radio-1"><span class="radio">Price $</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="price" id="radio-2" value=2>
-                    <label for="radio-2"><span class="radio">Price $$</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="price" id="radio-3" value=3>
-                    <label for="radio-3"><span class="radio">Price $$$</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="price" id="radio-4" value=4>
-                    <label for="radio-4"><span class="radio">Price $$$$</span></label>
-                </div>
-            </section>
+            <p class="formTextStyle">How much do I want to spend?</p>
+                <section id="first" class="section">
+                    <div class="container">
+                        <input type="radio" name="price" id="radio-1" value=1>
+                        <label for="radio-1"><span class="radio">Price $</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="price" id="radio-2" value=2>
+                        <label for="radio-2"><span class="radio">Price $$</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="price" id="radio-3" value=3>
+                        <label for="radio-3"><span class="radio">Price $$$</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="price" id="radio-4" value=4>
+                        <label for="radio-4"><span class="radio">Price $$$$</span></label>
+                    </div>
+                </section>
         </div>
 
 
         <div class="boxyBox3">
-            How adventurous am I?<br />
-
-            <section id="first" class="section">
-                <div class="container">
-                    <input type="radio" name="adventure" id="radio-5" value="boring">
-                    <label for="radio-5"><span class="radio">Nope. I’m boring</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="adventure" id="radio-6" value="fun">
-                    <label for="radio-6"><span class="radio">Push me a little</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="adventure" id="radio-7" value="exciting">
-                    <label for="radio-7"><span class="radio">Let's DO THIS!</span></label>
-                </div>
-                <div class="container">
-                    <input type="radio" name="adventure" id="radio-8" value="sketch">
-                    <label for="radio-8"><span class="radio">I make bad life decisions</span></label>
-                </div>
-            </section>
+            <p class="formTextStyle">How adventurous am I?</p>
+                <section id="first" class="section">
+                    <div class="container">
+                        <input type="radio" name="adventure" id="radio-5" value="boring">
+                        <label for="radio-5"><span class="radio">Nope. I’m boring</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="adventure" id="radio-6" value="fun">
+                        <label for="radio-6"><span class="radio">Push me a little</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="adventure" id="radio-7" value="exciting">
+                        <label for="radio-7"><span class="radio">Let's DO THIS!</span></label>
+                    </div>
+                    <div class="container">
+                        <input type="radio" name="adventure" id="radio-8" value="sketch">
+                        <label for="radio-8"><span class="radio">I make bad life decisions</span></label>
+                    </div>
+                </section>
         </div>
 
 
 
-        What am I looking for?<br />
+        <p class="formTextStyle"> What am I looking for?</p>
+        <p class="cautionText">(Pick a few options that suit your fancy)</p>
         <div class="boxyBox">
             <section id="second" class="section">
                 <div class="container">
@@ -198,7 +198,7 @@
 
 
 
-        <input class="btn btn-outline-dark btn-lg" type="submit" value="Submit"><br />
+        <input class="btn btn-outline-dark btn-block" type="submit" value="S U B M I T"><br />
     </form>
 
 

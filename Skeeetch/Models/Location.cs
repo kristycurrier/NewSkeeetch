@@ -15,6 +15,6 @@ namespace Skeeetch.Models
         public string ZipCode { get; set; }
         public string State { get; set; }
         [JsonProperty("display_address")]
-        public List<string> DisplayAddress { get; set; }
+        public string[] DisplayAddress { get; set; }
     }
 }
