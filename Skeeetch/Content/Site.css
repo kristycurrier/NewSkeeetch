@@ -98,6 +98,11 @@ input[type="checkbox"]:checked + label span.checkbox::after {
     width: 33.33%; /* three boxes (use 25% for four, and 50% for two, etc) */
     padding: 10px; /* if you want space between the images */
 }
+.boxyBox2 {
+    float: left;
+    width: 50%; /* three boxes (use 25% for four, and 50% for two, etc) */
+    padding: 10px; /* if you want space between the images */
+}
 
 /*text input box styling follows here*/
 
@@ -234,4 +239,34 @@ body {
     max-height: 500px;
     max-width: 500px;
     float: right;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.skeeetchHeader {
+    width: 100%;
+    height: auto;
+    font-size: 4em;
+    font-weight: bold;
+    padding-left: 60px;
+    border-bottom: 6px solid darkslategray;
+}
+
+.mediumPic {
+    width: auto;
+    max-height: 40%;
+    float: right;
+}
+
+.middlePic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
 }
