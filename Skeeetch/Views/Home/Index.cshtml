@@ -17,9 +17,9 @@
             <p class="formTextStyle">Where do I want to go?</p>
                 <section class="advancedSearchTextbox">
                     City:<br />
-                    <input type="text" name="City"><br>
+                    <input type="text" name="City" pattern="[a-zA-Z\s]{2,50}$"><br>
                     State Abbreviation:<br />@Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
-                    <input type="text" name="State">
+                    <input type="text" name="State" pattern="/^[a-zA-Z]{2}/$">
                 </section>
         </div>
 
