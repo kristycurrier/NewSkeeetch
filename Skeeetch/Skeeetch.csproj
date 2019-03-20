@@ -298,12 +298,11 @@
     <Content Include="Views\Search\Review.cshtml" />
     <Content Include="Views\Search\Business.cshtml" />
     <Content Include="Views\Search\Keyword.cshtml" />
-
     <Content Include="Views\Search\TryAgain.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

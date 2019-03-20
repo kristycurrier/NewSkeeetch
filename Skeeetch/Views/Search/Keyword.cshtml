@@ -8,12 +8,12 @@
 
 <div>
     <h4>Here are the top three options based on your selection input. They are being represented by the key sentiment keywords from user's reviews of the establishments. Click on the one that most speaks to you to see where you will end up!</h4>
-   <br />
+    <br />
     <dl class="dl-horizontal">
-       
+
         @*@Html.DisplayNameFor(model => model.Documents.FirstOrDefault().YelpId)*@
-        
-        
+
+
         <dd class="boxyBox3">
             <div class="bigBoldText">
                 <a href="@Url.Action("Business", "Search", new { YelpId = 0})" class="button hvr-pulse-grow">
@@ -27,7 +27,7 @@
             </div>
 
         </dd>
-      
+
         <dd class="boxyBox3">
             <div class="bigBoldText">
                 <a href="@Url.Action("Business", "Search", new { YelpId = 1})" class="button hvr-pulse-grow">
@@ -40,7 +40,7 @@
                         }
                     }
                 </a>
-                </div>
+            </div>
         </dd>
 
         <dd class="boxyBox3">
@@ -57,9 +57,9 @@
 
                     }
                 </a>
-                </div>
+            </div>
         </dd>
-        
+
     </dl>
-    
+   
 </div>
