@@ -25,7 +25,6 @@ namespace Skeeetch.Services
             }
 
             var allTerms = string.Join("+", searchTermWordList);
-
             var url = $"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}";
 
             return url;
@@ -38,9 +37,7 @@ namespace Skeeetch.Services
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
 
             var result = await client.GetAsync(url);
-
             var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
-
             List<Business> businessList = businessResults.Result.businesses.ToList();
 
             return businessList;

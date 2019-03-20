@@ -1,4 +1,5 @@
-﻿using Skeeetch.Models;
+﻿using Skeeetch.Data;
+using Skeeetch.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace Skeeetch.Logic
 {
     public class BusinessList
     {
+        private readonly SkeeetchContext _context = new SkeeetchContext();
+
         public BusinessList()
         {
         }
@@ -72,7 +75,16 @@ namespace Skeeetch.Logic
                 price = "1,2,3,4";
             }
 
-            var allTerms = string.Join("+", searchTerms.Terms);
+            List<string> searchTermWordList = new List<string>();
+
+            for (int i = 0; i < searchTerms.Terms.Length; i++)
+            {
+                var iD = searchTerms.Terms[i];
+                var dataInput = _context.Categories.First(t => t.ID == iD);
+                searchTermWordList.Add(dataInput.SearchTerm);
+            }
+
+            var allTerms = string.Join("+", searchTermWordList);
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");

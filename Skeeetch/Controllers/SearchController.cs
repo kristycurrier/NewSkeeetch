@@ -47,6 +47,10 @@ namespace Skeeetch.Controllers
 
             var sortList = new Sorting();
             var sortedBusinessList = sortList.SortList(validBusinessList, searchTerms);
+            if(sortedBusinessList==null)
+            {
+                return RedirectToAction("TryAgain");
+            }
 
 
             List<string> businessListTopThree = businessService.GetTopThreeFromSortedList(sortedBusinessList);
@@ -60,19 +64,9 @@ namespace Skeeetch.Controllers
         public async Task<ActionResult> Reviews()
         {
             List<string> businessList = _cache.Get("idList") as List<string>;
-            List<ReviewRoot> reviewListofTopThree = new List<ReviewRoot>();
 
-            for (int i = 0; i < businessList.Count; i++)
-            {
-                ViewBag.Title = "Reviews";
-                var client = new HttpClient();
-
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
-                var result = await client.GetAsync($"https://api.yelp.com/v3/businesses/{businessList[i]}/reviews");
-                var businessReviews = await result.Content.ReadAsAsync<ReviewRoot>();
-                reviewListofTopThree.Add(businessReviews);
-            }
+            ReviewService reviewService = new ReviewService();
+            List<ReviewRoot> reviewListofTopThree = await reviewService.GetTopThreeReviews(businessList);
 
             _cache.Set("topThreeReviewList", reviewListofTopThree, _policy);
 
@@ -103,11 +97,6 @@ namespace Skeeetch.Controllers
 
             BusinessService businessService = new BusinessService();
             var business = await businessService.ReturnBusiness(businessList, num);
-            //var id = businessList[num];
-            //var client = new HttpClient();
-            //client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-            //var result = client.GetAsync($"https://api.yelp.com/v3/businesses/{id}").Result;
-            //var business = result.Content.ReadAsAsync<Business>().Result;
 
             return View(business);
         }
@@ -117,52 +106,5 @@ namespace Skeeetch.Controllers
 
             return View();
         }
-
-
-        //public string CreateFindBuisnessUrl(SearchTerms searchTerms)
-        //{
-        //    List<string> searchTermWordList = new List<string>();
-
-        //    for (int i = 0; i < searchTerms.Terms.Length; i++)
-        //    {
-        //        var iD = searchTerms.Terms[i];
-        //        var dataInput = _context.Categories.First(t => t.ID == iD);
-        //        searchTermWordList.Add(dataInput.SearchTerm);
-        //    }
-
-        //    var allTerms = string.Join("+", searchTermWordList);
-
-        //    var url = $"https://api.yelp.com/v3/businesses/search?term={allTerms}&location={searchTerms.City}-{searchTerms.State}&price={searchTerms.Price}";
-
-        //    return url;
-        //}
-
-        //public async Task<List<Business>> CreateBuisnessListFromApi(string url)
-        //{
-        //    var client = new HttpClient();
-
-        //    client.DefaultRequestHeaders.Add("Authorization", "Bearer lXsHa6OCTkq8V1POzIH6RVt09Pv5ClmdHNe7rETSsrMgNNmdOpOGNnxOtLSXBIXEbWXJaq2jU_7_bBi15kUrLMu-Wjb4Xj87-Zotoru48k0JQzZbFc2RcLwQ0BCEXHYx");
-
-        //    var result = await client.GetAsync(url);
-
-        //    var businessResults = result.Content.ReadAsAsync<BusinessRoot>();
-
-        //    List<Business> businessList = businessResults.Result.businesses.ToList();
-
-        //    return businessList;
-        //}
-
-        //public List<string> GetTopThreeFromSortedList(List<Business> sortedBusinessList)
-        //{
-        //    List<string> businessListTopThree = new List<string>();
-
-        //    businessListTopThree.Add(sortedBusinessList.ElementAt(0).YelpId);
-        //    businessListTopThree.Add(sortedBusinessList.ElementAt(1).YelpId);
-        //    businessListTopThree.Add(sortedBusinessList.ElementAt(2).YelpId);
-
-        //    return businessListTopThree;
-        //}
-
-
     }
 }
